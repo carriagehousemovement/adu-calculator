@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADU Carriage House Cost Calculator | The Carriage House Movement</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --navy: #1e3a5f;
+    --teal: #5dada6;
+    --charcoal: #4a4a4a;
+    --light-gray: #fafafa;
+    --coral: #e87060;
+    --white: #ffffff;
+    --coral-hover: #d45a4a;
+    --teal-hover: #4a9a93;
+    --teal-light: rgba(93, 173, 166, 0.1);
+    --coral-light: rgba(232, 112, 96, 0.08);
+    --navy-light: rgba(30, 58, 95, 0.06);
+    --border: #e2e8f0;
+    --text-light: #64748b;
+    --shadow: 0 4px 24px rgba(30, 58, 95, 0.08);
+    --shadow-lg: 0 8px 40px rgba(30, 58, 95, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--charcoal);
+    background: var(--light-gray);
+    line-height: 1.6;
+  }
+
+  .calculator-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .calc-header {
+    text-align: center;
+    padding: 36px 20px 28px;
+  }
+
+  .calc-header h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .calc-header p {
+    font-size: 15px;
+    color: var(--text-light);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .calc-header .powered-by {
+    font-size: 12px;
+    color: var(--teal);
+    margin-top: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .calc-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+
+  .calc-card h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--teal-light);
+  }
+
+  .calc-card h2 .step-num {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    background: var(--teal);
+    color: var(--white);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .field-group { margin-bottom: 20px; }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  select, input[type="text"], input[type="email"], input[type="number"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--charcoal);
+    background: var(--white);
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  select:focus, input:focus {
+    outline: none;
+    border-color: var(--teal);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%234a4a4a' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  .radio-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .radio-option { position: relative; }
+
+  .radio-option input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .radio-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 10px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .radio-option label .tier-name {
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+
+  .radio-option label .tier-price {
+    font-size: 11px;
+    color: var(--text-light);
+  }
+
+  .radio-option input:checked + label {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .radio-option input:checked + label .tier-name { color: var(--teal); }
+
+  /* Zoning Status Badge */
+  .zoning-status {
+    display: none;
+    margin-top: 16px;
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .zoning-status.show { display: block; }
+
+  .zoning-status.green {
+    background: rgba(93, 173, 166, 0.1);
+    border: 1px solid rgba(93, 173, 166, 0.3);
+  }
+  .zoning-status.yellow {
+    background: rgba(232, 180, 50, 0.08);
+    border: 1px solid rgba(232, 180, 50, 0.3);
+  }
+  .zoning-status.red {
+    background: var(--coral-light);
+    border: 1px solid rgba(232, 112, 96, 0.3);
+  }
+
+  .zoning-status .zoning-label {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .zoning-status.green .zoning-label { color: #2a8a7e; }
+  .zoning-status.yellow .zoning-label { color: #b8860b; }
+  .zoning-status.red .zoning-label { color: var(--coral); }
+
+  .zoning-status .zoning-detail { color: var(--charcoal); }
+
+  .zoning-source {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  .btn-calculate {
+    width: 100%;
+    padding: 16px;
+    background: var(--coral);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-calculate:hover {
+    background: var(--coral-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(232, 112, 96, 0.3);
+  }
+
+  /* Results */
+  .results-section { display: none; }
+  .results-section.show { display: block; }
+
+  .results-headline {
+    background: linear-gradient(135deg, var(--navy) 0%, #2a4f7a 100%);
+    border-radius: 12px;
+    padding: 32px 28px;
+    margin-bottom: 16px;
+    color: var(--white);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .results-headline h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+    border: none;
+    padding: 0;
+    color: var(--white);
+  }
+
+  .results-headline .location-label {
+    font-size: 13px;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .result-row:last-child { border-bottom: none; }
+
+  .result-row .rlabel {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+  }
+
+  .result-row .rvalue {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .result-row .rvalue.coral { color: var(--coral); }
+  .result-row .rvalue.teal { color: var(--teal); }
+
+  .result-row.highlight {
+    background: rgba(93, 173, 166, 0.1);
+    margin: 4px -12px;
+    padding: 12px;
+    border-radius: 8px;
+    border-bottom: none;
+  }
+
+  .results-zoning { margin-bottom: 16px; }
+
+  /* Locked content */
+  .locked-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .locked-card .locked-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 40%, var(--white) 70%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 28px;
+    z-index: 2;
+  }
+
+  .locked-overlay .lock-icon { font-size: 32px; margin-bottom: 12px; }
+
+  .locked-overlay h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    color: var(--navy);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .locked-overlay p {
+    font-size: 14px;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 16px;
+    max-width: 360px;
+  }
+
+  .email-form {
+    display: flex;
+    width: 100%;
+    max-width: 400px;
+    gap: 8px;
+  }
+
+  .email-form input {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .email-form button {
+    padding: 12px 20px;
+    background: var(--coral);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .email-form button:hover { background: var(--coral-hover); }
+
+  .email-privacy {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .blurred-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    filter: blur(4px);
+    user-select: none;
+  }
+
+  /* Unlocked */
+  .unlocked-section { display: none; }
+  .unlocked-section.show { display: block; }
+
+  .detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .detail-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .detail-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-table tr:nth-child(even) td { background: var(--light-gray); }
+
+  .detail-table .subtotal td {
+    font-weight: 700;
+    background: var(--teal-light);
+    color: var(--navy);
+  }
+
+  .financing-card {
+    background: var(--teal-light);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  .financing-card h4 {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: var(--navy);
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .financing-card p {
+    font-size: 13px;
+    color: var(--charcoal);
+    line-height: 1.6;
+  }
+
+  .financing-card .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .badge.hot { background: var(--coral-light); color: var(--coral); }
+  .badge.available { background: var(--teal-light); color: #2a8a7e; }
+
+  .calc-footer {
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .calc-footer a {
+    color: var(--teal);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  @media (max-width: 540px) {
+    .calc-header h1 { font-size: 24px; }
+    .radio-group { grid-template-columns: 1fr; }
+    .email-form { flex-direction: column; }
+    .calc-card { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="calculator-container">
+  <div class="calc-header">
+    <h1>How Much Will Your Carriage House Cost?</h1>
+    <p>Get a personalized estimate for your city, your garage, your build goals. Real numbers in 60 seconds.</p>
+    <div class="powered-by">The Carriage House Movement</div>
+  </div>
+
+  <!-- Step 1: Location -->
+  <div class="calc-card">
+    <h2><span class="step-num">1</span> Your Location</h2>
+    <div class="field-group">
+      <label for="stateSelect">State</label>
+      <select id="stateSelect" onchange="updateCities()">
+        <option value="">Select your state</option>
+        <option value="MA">Massachusetts</option>
+        <option value="NY">New York</option>
+        <option value="OH">Ohio</option>
+        <option value="other_midwest">Other Midwest (IN, MI, WI, MN, IL, IA, MO)</option>
+        <option value="other_southeast">Southeast (GA, FL, NC, SC, TN, AL, VA)</option>
+        <option value="other_south">South (TX, LA, AR, MS, OK)</option>
+        <option value="other_mountain">Mountain (CO, UT, AZ, NM, MT, ID)</option>
+        <option value="other_northeast">Other Northeast (NJ, PA, CT, MD, DC)</option>
+        <option value="other_west">West (CA, WA, OR, NV, HI)</option>
+      </select>
+    </div>
+    <div class="field-group" id="cityGroup" style="display:none;">
+      <label for="citySelect">City / Municipality</label>
+      <select id="citySelect" onchange="showZoning()">
+        <option value="">Select your city</option>
+      </select>
+      <p class="field-hint">Don't see your city? Select "Other" at the bottom of the list.</p>
+    </div>
+    <div class="zoning-status" id="zoningStatus"></div>
+  </div>
+
+  <!-- Step 2: Property -->
+  <div class="calc-card">
+    <h2><span class="step-num">2</span> Your Property</h2>
+    <div class="field-group">
+      <label for="homeValue">Estimated Home Value ($)</label>
+      <input type="number" id="homeValue" placeholder="e.g. 250000" min="50000" step="5000">
+    </div>
+    <div class="field-group">
+      <label>Garage Size</label>
+      <div class="radio-group">
+        <div class="radio-option">
+          <input type="radio" id="garage1" name="garageSize" value="1car">
+          <label for="garage1"><span class="tier-name">1-Car</span><span class="tier-price">~200 sq ft</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" id="garage2" name="garageSize" value="2car" checked>
+          <label for="garage2"><span class="tier-name">2-Car</span><span class="tier-price">~400 sq ft</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" id="garage3" name="garageSize" value="3car">
+          <label for="garage3"><span class="tier-name">3+ Car</span><span class="tier-price">~600 sq ft</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="rentEstimate">Expected Monthly Rent ($)</label>
+      <input type="number" id="rentEstimate" placeholder="e.g. 1200" min="400" step="50">
+      <p class="field-hint">Typical range: $800 - $1,800 depending on market</p>
+    </div>
+  </div>
+
+  <!-- Step 3: Build Tier -->
+  <div class="calc-card">
+    <h2><span class="step-num">3</span> Build Tier</h2>
+    <div class="radio-group">
+      <div class="radio-option">
+        <input type="radio" id="tierBare" name="buildTier" value="bare">
+        <label for="tierBare"><span class="tier-name">Bare Minimum</span><span class="tier-price">Get it livable</span></label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" id="tierStandard" name="buildTier" value="standard" checked>
+        <label for="tierStandard"><span class="tier-name">Standard</span><span class="tier-price">Quality finish</span></label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" id="tierUpscale" name="buildTier" value="upscale">
+        <label for="tierUpscale"><span class="tier-name">Upscale</span><span class="tier-price">Premium build</span></label>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-calculate" onclick="calculate()">Calculate My Carriage House Cost</button>
+
+  <!-- FREE RESULTS -->
+  <div class="results-section" id="freeResults">
+    <div class="results-headline">
+      <h2>Your Carriage House Estimate</h2>
+      <div class="location-label" id="resultLocation"></div>
+      <div class="result-row highlight">
+        <span class="rlabel">Estimated Build Cost</span>
+        <span class="rvalue coral" id="resultCost"></span>
+      </div>
+      <div class="result-row">
+        <span class="rlabel">Payback Period</span>
+        <span class="rvalue" id="resultPayback"></span>
+      </div>
+      <div class="result-row">
+        <span class="rlabel">Annual ROI</span>
+        <span class="rvalue teal" id="resultROI"></span>
+      </div>
+      <div class="result-row">
+        <span class="rlabel">Monthly Rental Income</span>
+        <span class="rvalue" id="resultRent"></span>
+      </div>
+      <div class="result-row">
+        <span class="rlabel">Est. Property Value Increase</span>
+        <span class="rvalue teal" id="resultAppreciation"></span>
+      </div>
+    </div>
+
+    <div class="results-zoning" id="resultsZoning"></div>
+
+    <!-- LOCKED: Line-by-line breakdown -->
+    <div class="calc-card locked-card" id="lockedCard">
+      <h2>Line-by-Line Cost Breakdown</h2>
+      <div class="blurred-row"><span>Demolition & Structural</span><span>$XX,XXX</span></div>
+      <div class="blurred-row"><span>Foundation & Framing</span><span>$XX,XXX</span></div>
+      <div class="blurred-row"><span>Plumbing (rough + finish)</span><span>$XX,XXX</span></div>
+      <div class="blurred-row"><span>Electrical</span><span>$XX,XXX</span></div>
+      <div class="blurred-row"><span>HVAC & Insulation</span><span>$XX,XXX</span></div>
+      <div class="blurred-row"><span>Interior Finish</span><span>$XX,XXX</span></div>
+      <div class="blurred-row"><span>Permits & Fees</span><span>$X,XXX</span></div>
+      <div class="locked-overlay">
+        <div class="lock-icon">&#128274;</div>
+        <h3>Unlock Full Report</h3>
+        <p>Get the line-by-line cost breakdown, tax impact, and financing options for your specific build.</p>
+        <form class="email-form" onsubmit="submitEmail(event)">
+          <input type="email" id="emailInput" placeholder="Enter your email" required>
+          <button type="submit">Unlock Free</button>
+        </form>
+        <p class="email-privacy">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNLOCKED RESULTS -->
+  <div class="unlocked-section" id="unlockedResults">
+    <div class="calc-card">
+      <h2>Detailed Cost Breakdown</h2>
+      <table class="detail-table" id="costTable">
+        <thead><tr><th>Line Item</th><th style="text-align:right">Estimated Cost</th></tr></thead>
+        <tbody id="costTableBody"></tbody>
+      </table>
+    </div>
+    <div class="calc-card">
+      <h2>Tax & Value Impact</h2>
+      <div id="taxImpact"></div>
+    </div>
+    <div class="calc-card">
+      <h2>Financing Options</h2>
+      <div id="financingOptions"></div>
+    </div>
+    <div class="calc-card">
+      <h2>Volume Discount Opportunity</h2>
+      <div id="volumeDiscount"></div>
+    </div>
+  </div>
+
+  <div class="calc-footer">
+    <p>Estimates based on 15 years of research, contractor quotes, and regional construction data.<br>
+    Not financial advice. Actual costs vary by contractor, materials, and site conditions.<br><br>
+    <a href="https://thecarriagehousemovement.com">thecarriagehousemovement.com</a> &mdash; One garage at a time.</p>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// MUNICIPALITY DATABASE
+// ============================================================
+const MUNICIPALITIES = {
+  MA: {
+    "Boston": {
+      costMult: 1.55, medianRent: 2800, taxRate: 1.05, medianHome: 725000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted By Right — Statewide Law (Feb 2025)",
+      zoningDetail: "Massachusetts' Affordable Homes Act (Ch. 150, Acts of 2024) allows one ADU up to 900 sq ft by right on any single-family lot statewide, effective February 2, 2025. Boston also participates in the state's $10M ADU assistance program through Massachusetts Housing Partnership. No owner-occupancy requirement under state law.",
+      zoningSource: "mass.gov, Affordable Homes Act (2024), MA Housing Partnership"
+    },
+    "Cambridge": {
+      costMult: 1.60, medianRent: 2900, taxRate: 0.64, medianHome: 900000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted By Right — Statewide Law + Local Support",
+      zoningDetail: "Cambridge permits ADUs by right under Massachusetts' statewide ADU law (900 sq ft or half primary dwelling, whichever is greater). Cambridge offers a residential tax exemption ($499,263 reduction in taxable value for owner-occupants). The city's dense housing stock makes internal conversions and basement ADUs the most common type.",
+      zoningSource: "mass.gov, cambridgema.gov, Affordable Homes Act (2024)"
+    },
+    "Somerville": {
+      costMult: 1.50, medianRent: 2600, taxRate: 1.02, medianHome: 800000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted By Right — Statewide Law + Local Support",
+      zoningDetail: "Somerville permits ADUs by right under state law. The city has been proactive on housing density, with its own zoning overhaul in recent years. Residential exemption available for owner-occupants. ADUs up to 900 sq ft (or half primary dwelling size) allowed on single-family lots.",
+      zoningSource: "mass.gov, somervillema.gov, Affordable Homes Act (2024)"
+    },
+    "Worcester": {
+      costMult: 1.10, medianRent: 1500, taxRate: 1.33, medianHome: 430000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted By Right — Statewide Law",
+      zoningDetail: "Worcester permits ADUs by right under Massachusetts' statewide ADU law. As Central Mass's largest city, Worcester offers significantly lower construction costs than Greater Boston. Median home prices climbed 4.3% in 2025, making ADU rental income increasingly attractive for homeowners.",
+      zoningSource: "mass.gov, Affordable Homes Act (2024)"
+    },
+    "Springfield": {
+      costMult: 1.0, medianRent: 1200, taxRate: 2.02, medianHome: 260000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted By Right — Statewide Law",
+      zoningDetail: "Springfield permits ADUs by right under state law. As Western Massachusetts' largest city, Springfield has the most affordable housing stock among major MA cities, making ADU conversion economics particularly favorable. Lower land and construction costs with solid rental demand from colleges and healthcare employers.",
+      zoningSource: "mass.gov, Affordable Homes Act (2024)"
+    },
+    "Brookline": {
+      costMult: 1.55, medianRent: 2700, taxRate: 0.98, medianHome: 1100000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted By Right — Statewide Law",
+      zoningDetail: "Brookline permits ADUs by right under state law. As a historic inner suburb bordering Boston, Brookline's high property values make ADU rental income a strong financial proposition. The town's walkable neighborhoods and transit access make ADU rentals highly desirable.",
+      zoningSource: "mass.gov, Affordable Homes Act (2024)"
+    },
+    "Newton": {
+      costMult: 1.50, medianRent: 2500, taxRate: 1.01, medianHome: 1050000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted By Right — Statewide Law",
+      zoningDetail: "Newton permits ADUs by right under state law. The city adopted its own ADU-friendly zoning updates in recent years. Large lot sizes in many Newton neighborhoods are well-suited for detached ADUs and carriage house conversions.",
+      zoningSource: "mass.gov, Affordable Homes Act (2024)"
+    },
+    "Other Massachusetts City": {
+      costMult: 1.20, medianRent: 1800, taxRate: 1.30, medianHome: 500000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted By Right — Statewide Law (Feb 2025)",
+      zoningDetail: "All Massachusetts municipalities must allow ADUs by right under the Affordable Homes Act (effective Feb 2, 2025). One ADU up to 900 sq ft (or half primary dwelling size, whichever is greater) per single-family lot. In 2025 alone, 1,224 ADUs were approved statewide with 1,639 applications filed. Sign up to be notified when your city gets detailed data.",
+      zoningSource: "mass.gov, Affordable Homes Act (2024)"
+    }
+  },
+  NY: {
+    "New York City": {
+      costMult: 1.65, medianRent: 2500, taxRate: 0.88, medianHome: 768000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted — City of Yes + Plus One Program",
+      zoningDetail: "NYC legalized Ancillary Dwelling Units in 2025 under the City of Yes housing initiative. Applications opened September 2025. The NYS Plus One ADU Program provides up to $125,000 in grants per homeowner for design, permitting, and construction. NYC launched an ADU For You platform with pre-approved designs in March 2026. Both attached and detached ADUs permitted.",
+      zoningSource: "nyc.gov/buildings, hcr.ny.gov, NYC HPD Plus One ADU Program"
+    },
+    "Buffalo": {
+      costMult: 0.95, medianRent: 1100, taxRate: 2.50, medianHome: 205000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted — BURA ADU Program Active",
+      zoningDetail: "Buffalo permits ADUs in certain residential zoning districts under the Green Code (Unified Development Ordinance). The Buffalo Urban Renewal Agency (BURA) runs an active ADU program providing technical and financial assistance. The city participates in the NYS Plus One ADU Program ($125K grants available).",
+      zoningSource: "buffalourbanrenewal.com, buffalony.gov Green Code"
+    },
+    "Rochester": {
+      costMult: 0.93, medianRent: 1100, taxRate: 2.80, medianHome: 160000,
+      zoning: "yellow",
+      zoningLabel: "In Progress — ADU Legislation Under Review",
+      zoningDetail: "Rochester's ADU zoning is evolving. NYS Assembly Bill A4854 aims to streamline ADU permits statewide, which would directly benefit Rochester homeowners. Rochester is the #2 ranked housing market for 2026 (Realtor.com), with strong rental demand. Median home prices remain affordable at $160K, making ADU conversion economics very favorable.",
+      zoningSource: "NYS Assembly Bill A4854, Realtor.com (2026)"
+    },
+    "Syracuse": {
+      costMult: 0.95, medianRent: 1050, taxRate: 2.70, medianHome: 180000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted — One Per Property",
+      zoningDetail: "Syracuse allows one ADU per property with a single-family home. Both attached and detached ADUs are permitted. Detached units must be at the side or rear of the primary structure and are limited to one bedroom. Syracuse participates in regional housing discussions and may be eligible for NYS Plus One funding.",
+      zoningSource: "syracuse.ny.us zoning code"
+    },
+    "Yonkers": {
+      costMult: 1.40, medianRent: 2300, taxRate: 1.60, medianHome: 505000,
+      zoning: "yellow",
+      zoningLabel: "In Progress — State Legislation Pending",
+      zoningDetail: "Yonkers ADU policy is being shaped by NYS Assembly Bill A4854, which would facilitate ADU creation statewide. As Westchester County's largest city, Yonkers has strong rental demand ($2,300+ average rent). The city must comply with building codes and zoning laws for any accessory structures. Check with Planning Department for current requirements.",
+      zoningSource: "steadily.com, NYS Assembly Bill A4854"
+    },
+    "Albany": {
+      costMult: 1.05, medianRent: 1400, taxRate: 2.40, medianHome: 220000,
+      zoning: "yellow",
+      zoningLabel: "In Progress — Legislation Being Considered",
+      zoningDetail: "Albany does not currently permit ADUs by right, but legislation is being considered. As the state capital, Albany is well-positioned to benefit from the statewide ADU push through Assembly Bill A4854. Strong rental demand from state government and university employees.",
+      zoningSource: "ecode360.com/Albany, NYS legislature"
+    },
+    "Ithaca": {
+      costMult: 1.15, medianRent: 1600, taxRate: 2.10, medianHome: 310000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted — Progressive Zoning",
+      zoningDetail: "Ithaca has been a leader in progressive housing policy in upstate New York. The city permits ADUs in residential zones and has explored eliminating single-family-only zoning. Strong rental demand from Cornell University and Ithaca College makes ADU income highly reliable.",
+      zoningSource: "cityofithaca.org zoning code"
+    },
+    "Other New York City": {
+      costMult: 1.15, medianRent: 1400, taxRate: 2.20, medianHome: 280000,
+      zoning: "yellow",
+      zoningLabel: "Check Your Local Zoning — State Push Underway",
+      zoningDetail: "New York State is actively expanding ADU laws through Assembly Bill A4854 and the $85M Plus One ADU Program. Up to $125,000 in grants available per homeowner through the state program. 50 municipalities now participate in Plus One. Contact your city's planning department for current ADU regulations. Sign up to be notified when your city is added.",
+      zoningSource: "hcr.ny.gov, NYS Assembly Bill A4854"
+    }
+  },
+  OH: {
+    "Cleveland Heights": {
+      costMult: 1.0, medianRent: 1200, taxRate: 2.56, medianHome: 165000,
+      zoning: "yellow",
+      zoningLabel: "In Progress \u2014 ADU Zoning Under Development",
+      zoningDetail: "Cleveland Heights is actively developing ADU zoning amendments with the Cuyahoga County Planning Commission. An ADU Design Competition funded by AARP announced 5 winning pre-approved designs in December 2024. Community input meetings planned for Fall 2025. Zoning text amendments drafted but not yet formally adopted.",
+      zoningSource: "clevelandheights.gov, Cuyahoga County Planning Commission (2024\u20132025)"
+    },
+    "Lakewood": {
+      costMult: 1.02, medianRent: 1100, taxRate: 2.41, medianHome: 190000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted \u2014 R-2 Zoning Districts",
+      zoningDetail: "Lakewood permits ADUs on R-2 (Single- and Two-Family) zoned properties. Owner must occupy either the primary dwelling or the ADU. One off-street parking space required. Cannot be separately sold. Must be approved by the Architectural Board of Review.",
+      zoningSource: "lakewoodoh.gov, Lakewood Municipal Code 18A.40.110"
+    },
+    "Shaker Heights": {
+      costMult: 1.05, medianRent: 1400, taxRate: 2.78, medianHome: 230000,
+      zoning: "red",
+      zoningLabel: "Not Currently Permitted",
+      zoningDetail: "Shaker Heights does not currently have an ADU zoning ordinance. The city is a First Suburbs Consortium member and has participated in regional ADU discussions. Homeowners should contact the Planning Department and consider advocating through City Council.",
+      zoningSource: "First Suburbs Consortium, Cuyahoga County Planning"
+    },
+    "University Heights": {
+      costMult: 1.0, medianRent: 1150, taxRate: 2.67, medianHome: 155000,
+      zoning: "red",
+      zoningLabel: "Not Currently Permitted",
+      zoningDetail: "University Heights does not currently have a specific ADU zoning ordinance. As a First Suburbs Consortium member, the city is part of regional housing discussions.",
+      zoningSource: "First Suburbs Consortium"
+    },
+    "South Euclid": {
+      costMult: 0.97, medianRent: 1050, taxRate: 2.59, medianHome: 130000,
+      zoning: "yellow",
+      zoningLabel: "Pilot Program \u2014 Expanded Accessory Uses Under Review",
+      zoningDetail: "South Euclid participated in the Cuyahoga County Planning Commission\u2019s Single-Family Zoning Analysis, which included expanding permitted accessory uses. ADU-specific text amendments are being explored as part of the First Suburbs zoning modernization initiative.",
+      zoningSource: "Cuyahoga County Planning Commission"
+    },
+    "Euclid": {
+      costMult: 0.95, medianRent: 950, taxRate: 2.72, medianHome: 100000,
+      zoning: "yellow",
+      zoningLabel: "Pilot Program \u2014 Expanded Accessory Uses Under Review",
+      zoningDetail: "Euclid participated in the Cuyahoga County Single-Family Zoning Analysis as a pilot community. Expanded permitted uses being explored. ADU-specific ordinance not yet adopted.",
+      zoningSource: "Cuyahoga County Planning Commission"
+    },
+    "Maple Heights": {
+      costMult: 0.93, medianRent: 900, taxRate: 2.85, medianHome: 85000,
+      zoning: "red",
+      zoningLabel: "Not Currently Permitted",
+      zoningDetail: "Maple Heights does not currently permit ADUs. As a First Suburbs Consortium member, the city may benefit from regional zoning modernization efforts.",
+      zoningSource: "First Suburbs Consortium"
+    },
+    "Garfield Heights": {
+      costMult: 0.93, medianRent: 900, taxRate: 2.74, medianHome: 90000,
+      zoning: "red",
+      zoningLabel: "Not Currently Permitted",
+      zoningDetail: "Garfield Heights does not currently have an ADU ordinance. Contact the city\u2019s Planning and Zoning Department for current accessory structure regulations.",
+      zoningSource: "First Suburbs Consortium"
+    },
+    "Bedford": {
+      costMult: 0.94, medianRent: 950, taxRate: 2.63, medianHome: 110000,
+      zoning: "red",
+      zoningLabel: "Not Currently Permitted",
+      zoningDetail: "Bedford does not currently permit ADUs by right. Home to the First Suburbs Consortium\u2019s director, the city may be among those considering future ADU-friendly policy.",
+      zoningSource: "First Suburbs Consortium"
+    },
+    "Parma": {
+      costMult: 0.98, medianRent: 1100, taxRate: 2.35, medianHome: 150000,
+      zoning: "red",
+      zoningLabel: "Not Currently Permitted",
+      zoningDetail: "Parma does not currently have an ADU ordinance. As Cuyahoga County\u2019s largest suburb and a First Suburbs member, any ADU policy adoption here would have significant regional impact.",
+      zoningSource: "First Suburbs Consortium"
+    },
+    "Columbus": {
+      costMult: 1.03, medianRent: 1300, taxRate: 1.78, medianHome: 250000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted \u2014 All Residential Districts (Dec 2025)",
+      zoningDetail: "Columbus City Council adopted the ADU Pilot Program in November 2025, effective December 24, 2025. ADUs allowed by right in all residential and apartment residential districts. No additional off-street parking required. Historic areas may need additional approvals.",
+      zoningSource: "Columbus City Council, Title 33 (Nov 2025)"
+    },
+    "Cincinnati": {
+      costMult: 1.02, medianRent: 1250, taxRate: 2.10, medianHome: 210000,
+      zoning: "green",
+      zoningLabel: "ADUs Permitted (2023) \u2014 Low Adoption So Far",
+      zoningDetail: "Cincinnati was the first Ohio city to legalize ADUs in 2023. Structures up to 800 sq ft and under 13 ft may not require permits. Only 4 ADU permit requests in year one \u2014 a key data point for the adoption gap your movement addresses.",
+      zoningSource: "cincinnati-oh.gov, WOSU Public Media (Jan 2025)"
+    },
+    "Cleveland": {
+      costMult: 0.95, medianRent: 1000, taxRate: 2.83, medianHome: 100000,
+      zoning: "yellow",
+      zoningLabel: "Limited \u2014 Conditional Use in Some Districts",
+      zoningDetail: "Cleveland allows some accessory structures but lacks a comprehensive ADU ordinance. Conditional use approval or variance may be required depending on zoning district.",
+      zoningSource: "Cleveland zoning code"
+    },
+    "Other Ohio City": {
+      costMult: 1.0, medianRent: 1100, taxRate: 2.30, medianHome: 175000,
+      zoning: "yellow",
+      zoningLabel: "Check Your Local Zoning",
+      zoningDetail: "ADU regulations vary widely across Ohio municipalities. Most cities do not yet have specific ADU ordinances, but this is changing rapidly. Contact your city\u2019s planning department. Sign up to be notified when your city is added to our database.",
+      zoningSource: ""
+    }
+  },
+  other_midwest: {
+    "Other Midwest City": {
+      costMult: 1.0, medianRent: 1100, taxRate: 2.0, medianHome: 200000,
+      zoning: "yellow", zoningLabel: "Check Your Local Zoning",
+      zoningDetail: "ADU regulations vary by municipality. Contact your city\u2019s planning department. Sign up to be notified when we add your city.", zoningSource: ""
+    }
+  },
+  other_southeast: {
+    "Other Southeast City": {
+      costMult: 1.05, medianRent: 1300, taxRate: 1.2, medianHome: 275000,
+      zoning: "yellow", zoningLabel: "Check Your Local Zoning",
+      zoningDetail: "ADU regulations vary by municipality. Contact your city\u2019s planning department. Sign up to be notified when we add your city.", zoningSource: ""
+    }
+  },
+  other_south: {
+    "Other South City": {
+      costMult: 1.08, medianRent: 1200, taxRate: 1.5, medianHome: 250000,
+      zoning: "yellow", zoningLabel: "Check Your Local Zoning",
+      zoningDetail: "ADU regulations vary by municipality. Contact your city\u2019s planning department.", zoningSource: ""
+    }
+  },
+  other_mountain: {
+    "Other Mountain City": {
+      costMult: 1.18, medianRent: 1500, taxRate: 0.9, medianHome: 400000,
+      zoning: "yellow", zoningLabel: "Check Your Local Zoning",
+      zoningDetail: "ADU regulations vary by municipality. Contact your city\u2019s planning department.", zoningSource: ""
+    }
+  },
+  other_northeast: {
+    "Other Northeast City": {
+      costMult: 1.35, medianRent: 1800, taxRate: 2.2, medianHome: 350000,
+      zoning: "yellow", zoningLabel: "Check Your Local Zoning",
+      zoningDetail: "ADU regulations vary by municipality across the Northeast. NJ, CT, and PA are exploring ADU-friendly policies. Contact your city\u2019s planning department. Sign up to be notified when your state is added.", zoningSource: ""
+    }
+  },
+  other_west: {
+    "Other West City": {
+      costMult: 1.55, medianRent: 2200, taxRate: 1.1, medianHome: 550000,
+      zoning: "yellow", zoningLabel: "Check Your Local Zoning",
+      zoningDetail: "ADU regulations vary by municipality. Contact your city\u2019s planning department.", zoningSource: ""
+    }
+  }
+};
+
+const BASE_COSTS = {
+  bare: { total: 140000, lines: [
+    ["Demolition & site prep", 8000], ["Foundation reinforcement", 12000],
+    ["Structural framing (2nd floor)", 22000], ["Roofing", 8000],
+    ["Exterior siding & windows", 14000], ["Plumbing (rough + finish)", 20000],
+    ["Electrical", 10000], ["HVAC & insulation", 15000],
+    ["Interior walls & drywall", 8000], ["Flooring (basic)", 5000],
+    ["Kitchen (basic)", 8000], ["Bathroom (basic)", 6000], ["Permits & fees", 4000]
+  ]},
+  standard: { total: 160000, lines: [
+    ["Demolition & site prep", 10000], ["Foundation reinforcement", 14000],
+    ["Structural framing (2nd floor)", 24000], ["Roofing", 10000],
+    ["Exterior siding & windows", 16000], ["Plumbing (rough + finish)", 22000],
+    ["Electrical", 12000], ["HVAC & insulation", 18000],
+    ["Interior walls & drywall", 9000], ["Flooring (mid-grade)", 7000],
+    ["Kitchen (standard)", 10000], ["Bathroom (standard)", 8000], ["Permits & fees", 5000]
+  ]},
+  upscale: { total: 195000, lines: [
+    ["Demolition & site prep", 12000], ["Foundation reinforcement", 16000],
+    ["Structural framing (2nd floor)", 28000], ["Roofing (premium)", 14000],
+    ["Exterior siding & windows (premium)", 20000], ["Plumbing (premium fixtures)", 26000],
+    ["Electrical (smart home)", 15000], ["HVAC & insulation (high-efficiency)", 22000],
+    ["Interior walls & drywall", 10000], ["Flooring (hardwood/tile)", 10000],
+    ["Kitchen (upscale)", 14000], ["Bathroom (upscale)", 12000], ["Permits & fees", 6000]
+  ]}
+};
+
+const GARAGE_MULT = { "1car": 0.8, "2car": 1.0, "3car": 1.15 };
+
+function updateCities() {
+  const state = document.getElementById('stateSelect').value;
+  const cityGroup = document.getElementById('cityGroup');
+  const citySelect = document.getElementById('citySelect');
+  document.getElementById('zoningStatus').className = 'zoning-status';
+  citySelect.innerHTML = '<option value="">Select your city</option>';
+  if (!state) { cityGroup.style.display = 'none'; return; }
+  const cities = MUNICIPALITIES[state];
+  if (cities) {
+    Object.keys(cities).sort().forEach(city => {
+      const opt = document.createElement('option');
+      opt.value = city; opt.textContent = city;
+      citySelect.appendChild(opt);
+    });
+  }
+  cityGroup.style.display = 'block';
+}
+
+function showZoning() {
+  const state = document.getElementById('stateSelect').value;
+  const city = document.getElementById('citySelect').value;
+  const zoningEl = document.getElementById('zoningStatus');
+  if (!state || !city) { zoningEl.className = 'zoning-status'; return; }
+  const muni = MUNICIPALITIES[state]?.[city];
+  if (!muni) { zoningEl.className = 'zoning-status'; return; }
+  zoningEl.className = 'zoning-status show ' + muni.zoning;
+  zoningEl.innerHTML = '<div class="zoning-label">' + muni.zoningLabel + '</div>' +
+    '<div class="zoning-detail">' + muni.zoningDetail + '</div>' +
+    (muni.zoningSource ? '<div class="zoning-source">Source: ' + muni.zoningSource + '</div>' : '');
+  const rentInput = document.getElementById('rentEstimate');
+  if (!rentInput.value && muni.medianRent) rentInput.value = muni.medianRent;
+  const homeInput = document.getElementById('homeValue');
+  if (!homeInput.value && muni.medianHome) homeInput.value = muni.medianHome;
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+
+function calculate() {
+  const state = document.getElementById('stateSelect').value;
+  const city = document.getElementById('citySelect').value;
+  const homeValue = parseFloat(document.getElementById('homeValue').value) || 0;
+  const garageSize = document.querySelector('input[name="garageSize"]:checked')?.value || '2car';
+  const buildTier = document.querySelector('input[name="buildTier"]:checked')?.value || 'standard';
+  const rent = parseFloat(document.getElementById('rentEstimate').value) || 0;
+
+  if (!state || !city) { alert('Please select your state and city.'); return; }
+  if (!homeValue) { alert('Please enter your estimated home value.'); return; }
+  if (!rent) { alert('Please enter an expected monthly rent.'); return; }
+
+  const muni = MUNICIPALITIES[state]?.[city];
+  if (!muni) return;
+
+  const totalCost = Math.round(BASE_COSTS[buildTier].total * muni.costMult * GARAGE_MULT[garageSize]);
+  const annualRent = rent * 12;
+  const paybackYears = (totalCost / annualRent).toFixed(1);
+  const roi = ((annualRent / totalCost) * 100).toFixed(0);
+  const appreciation = Math.round(totalCost * 0.35);
+
+  const locationLabel = city.includes('Other') ? state.replace('other_', '').replace(/_/g, ' ') : city + ', ' + state;
+  document.getElementById('resultLocation').textContent = locationLabel;
+  document.getElementById('resultCost').textContent = fmt(totalCost);
+  document.getElementById('resultPayback').textContent = paybackYears + ' years';
+  document.getElementById('resultROI').textContent = roi + '%';
+  document.getElementById('resultRent').textContent = fmt(rent) + '/month';
+  document.getElementById('resultAppreciation').textContent = '+' + fmt(appreciation);
+
+  document.getElementById('freeResults').classList.add('show');
+
+  document.getElementById('resultsZoning').innerHTML = '<div class="zoning-status show ' + muni.zoning + '" style="display:block;">' +
+    '<div class="zoning-label">' + muni.zoningLabel + '</div>' +
+    '<div class="zoning-detail">' + muni.zoningDetail + '</div></div>';
+
+  window._calcData = { totalCost, costMult: muni.costMult, garageMult: GARAGE_MULT[garageSize], buildTier, rent, homeValue, muni, city, state, locationLabel, annualRent, paybackYears, roi, appreciation };
+
+  document.getElementById('freeResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function submitEmail(e) {
+  e.preventDefault();
+  const email = document.getElementById('emailInput').value;
+  // TODO: ConvertKit integration
+  // const d = window._calcData;
+  // fetch('https://api.convertkit.com/v3/forms/YOUR_FORM_ID/subscribe', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ api_key: 'YOUR_API_KEY', email, fields: { city: d.city, state: d.state, build_tier: d.buildTier, estimated_cost: d.totalCost } })
+  // });
+  showUnlockedResults();
+}
+
+function showUnlockedResults() {
+  const d = window._calcData;
+  if (!d) return;
+  const lines = BASE_COSTS[d.buildTier].lines;
+  const tbody = document.getElementById('costTableBody');
+  tbody.innerHTML = '';
+  lines.forEach(function(item) {
+    const adjusted = Math.round(item[1] * d.costMult * d.garageMult);
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + item[0] + '</td><td style="text-align:right">' + fmt(adjusted) + '</td>';
+    tbody.appendChild(tr);
+  });
+  var totalRow = document.createElement('tr');
+  totalRow.className = 'subtotal';
+  totalRow.innerHTML = '<td>Total Estimated Cost</td><td style="text-align:right">' + fmt(d.totalCost) + '</td>';
+  tbody.appendChild(totalRow);
+
+  var newValue = d.homeValue + d.appreciation;
+  var currentTax = d.homeValue * (d.muni.taxRate / 100);
+  var newTax = newValue * (d.muni.taxRate / 100);
+  var taxIncrease = newTax - currentTax;
+
+  document.getElementById('taxImpact').innerHTML =
+    '<table class="detail-table">' +
+    '<tr><td>Current Home Value</td><td style="text-align:right">' + fmt(d.homeValue) + '</td></tr>' +
+    '<tr><td>Estimated Value After ADU (+35%)</td><td style="text-align:right">' + fmt(newValue) + '</td></tr>' +
+    '<tr><td>Current Annual Property Tax (' + d.muni.taxRate + '%)</td><td style="text-align:right">' + fmt(currentTax) + '</td></tr>' +
+    '<tr><td>New Annual Property Tax</td><td style="text-align:right">' + fmt(newTax) + '</td></tr>' +
+    '<tr class="subtotal"><td>Annual Tax Increase</td><td style="text-align:right">' + fmt(taxIncrease) + '</td></tr>' +
+    '<tr><td>Net Annual Income (rent \u2212 tax increase)</td><td style="text-align:right;color:#2a8a7e;font-weight:700">' + fmt(d.annualRent - taxIncrease) + '</td></tr>' +
+    '</table>';
+
+  var fannieIncome = Math.round(d.rent * 0.75);
+  document.getElementById('financingOptions').innerHTML =
+    '<div class="financing-card"><div class="badge hot">Effective March 31, 2026</div>' +
+    '<h4>Fannie Mae HomeStyle Refresh</h4>' +
+    '<p>ADU rental income counts toward mortgage qualification (up to 30% of total income, 75% of market rent). Expanded to 3 ADUs on single-unit properties. At your rent of ' + fmt(d.rent) + '/month, Fannie Mae would count ' + fmt(fannieIncome) + '/month toward qualifying income.</p></div>' +
+    '<div class="financing-card"><div class="badge available">Available Now</div>' +
+    '<h4>Freddie Mac CHOICERenovation</h4>' +
+    '<p>Finance up to 75% of after-renovation value. At ' + fmt(newValue) + ' post-ADU, you could access up to ' + fmt(Math.round(newValue * 0.75)) + '. Factory-built and site-built ADUs eligible.</p></div>' +
+    '<div class="financing-card"><div class="badge available">Available Now</div>' +
+    '<h4>HELOC (Home Equity Line of Credit)</h4>' +
+    '<p>At ' + fmt(d.homeValue) + ' home value with 80% LTV, up to ' + fmt(Math.round(d.homeValue * 0.8)) + ' in available equity (minus existing mortgage). Monthly payments offset by ' + fmt(d.rent) + '/month rental income.</p></div>';
+
+  var discounted = Math.round(d.totalCost * 0.85);
+  document.getElementById('volumeDiscount').innerHTML =
+    '<p style="font-size:15px;margin-bottom:16px;">If your community reaches critical mass of conversions, prefab and volume purchasing could reduce costs by up to 15%.</p>' +
+    '<table class="detail-table">' +
+    '<tr><td>Your Individual Build Cost</td><td style="text-align:right">' + fmt(d.totalCost) + '</td></tr>' +
+    '<tr><td>With 15% Volume Discount</td><td style="text-align:right;color:#2a8a7e;font-weight:700">' + fmt(discounted) + '</td></tr>' +
+    '<tr class="subtotal"><td>Your Savings</td><td style="text-align:right">' + fmt(d.totalCost - discounted) + '</td></tr></table>' +
+    '<p style="font-size:13px;color:var(--text-light);margin-top:12px;">This is why the movement matters. More builds = lower costs for everyone.</p>';
+
+  document.getElementById('lockedCard').style.display = 'none';
+  document.getElementById('unlockedResults').classList.add('show');
+  document.getElementById('unlockedResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
