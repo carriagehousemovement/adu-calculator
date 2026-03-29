@@ -716,7 +716,7 @@
           <input type="email" id="emailInput" placeholder="Enter your email" required>
           <button type="submit">Unlock Free</button>
         </form>
-        <p class="email-privacy">Your info stays with us — never sold, never shared. Unsubscribe anytime.</p>
+        <p class="email-privacy">No spam. Unsubscribe anytime.</p>
       </div>
     </div>
   </div>
@@ -1125,14 +1125,60 @@ function calculate() {
 function submitEmail(e) {
   e.preventDefault();
   const email = document.getElementById('emailInput').value;
-  // TODO: ConvertKit integration
-  // const d = window._calcData;
-  // fetch('https://api.convertkit.com/v3/forms/YOUR_FORM_ID/subscribe', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ api_key: 'YOUR_API_KEY', email, fields: { city: d.city, state: d.state, build_tier: d.buildTier, estimated_cost: d.totalCost } })
-  // });
-  showUnlockedResults();
+  const d = window._calcData;
+  const btn = e.target.querySelector('button');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  // Build line-item summary for email
+  const tierLabel = d.buildTier === 'bare' ? 'Bare Minimum' : d.buildTier === 'standard' ? 'Standard' : 'Upscale';
+  const lines = BASE_COSTS[d.buildTier].lines;
+  var lineItems = '';
+  lines.forEach(function(item) {
+    var adjusted = Math.round(item[1] * d.costMult * d.garageMult);
+    lineItems += item[0] + ': $' + adjusted.toLocaleString() + ' | ';
+  });
+
+  // Send to ConvertKit with full results as custom fields
+  // CALCULATOR FORM — Find numeric ID at: Kit dashboard → Grow → Forms → click form → number in URL bar
+  fetch('https://api.convertkit.com/v3/forms/cc0bcc9c47/subscribe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      api_key: 'VQX_gj6gePaMoam7yK6RwA',
+      email: email,
+      fields: {
+        city: d.city,
+        state: d.state,
+        build_tier: tierLabel,
+        garage_size: d.garageMult === 0.8 ? '1-Car' : d.garageMult === 1.0 ? '2-Car' : '3-Car',
+        estimated_cost: '$' + d.totalCost.toLocaleString(),
+        monthly_rent: '$' + d.rent.toLocaleString(),
+        annual_rent: '$' + d.annualRent.toLocaleString(),
+        payback_years: d.paybackYears + ' years',
+        roi: d.roi + '%',
+        home_value: '$' + d.homeValue.toLocaleString(),
+        appreciation: '+$' + d.appreciation.toLocaleString(),
+        zoning_status: d.muni.zoningLabel,
+        line_items: lineItems
+      },
+      tags: ['calculator-lead']
+    })
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    if (data.subscription) {
+      showUnlockedResults();
+    } else {
+      btn.textContent = 'Unlock Full Report';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again.');
+    }
+  })
+  .catch(function() {
+    // If API fails, still show results (don't punish the user)
+    showUnlockedResults();
+  });
 }
 
 function showUnlockedResults() {
