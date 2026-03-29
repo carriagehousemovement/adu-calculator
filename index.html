@@ -1130,17 +1130,8 @@ function submitEmail(e) {
   btn.textContent = 'Sending...';
   btn.disabled = true;
 
-  // Build line-item summary for email
-  const tierLabel = d.buildTier === 'bare' ? 'Bare Minimum' : d.buildTier === 'standard' ? 'Standard' : 'Upscale';
-  const lines = BASE_COSTS[d.buildTier].lines;
-  var lineItems = '';
-  lines.forEach(function(item) {
-    var adjusted = Math.round(item[1] * d.costMult * d.garageMult);
-    lineItems += item[0] + ': $' + adjusted.toLocaleString() + ' | ';
-  });
-
-  // Send to ConvertKit with full results as custom fields
-  fetch('https://api.convertkit.com/v3/forms/9261788/subscribe', {
+  // CALCULATOR FORM — Find numeric ID at: Kit → Grow → Forms → click form → number in URL bar
+  fetch('https://api.convertkit.com/v3/forms/1923051/subscribe', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -1149,19 +1140,9 @@ function submitEmail(e) {
       fields: {
         city: d.city,
         state: d.state,
-        build_tier: tierLabel,
-        garage_size: d.garageMult === 0.8 ? '1-Car' : d.garageMult === 1.0 ? '2-Car' : '3-Car',
-        estimated_cost: '$' + d.totalCost.toLocaleString(),
-        monthly_rent: '$' + d.rent.toLocaleString(),
-        annual_rent: '$' + d.annualRent.toLocaleString(),
-        payback_years: d.paybackYears + ' years',
-        roi: d.roi + '%',
-        home_value: '$' + d.homeValue.toLocaleString(),
-        appreciation: '+$' + d.appreciation.toLocaleString(),
-        zoning_status: d.muni.zoningLabel,
-        line_items: lineItems
-      },
-      tags: ['calculator-lead']
+        build_tier: d.buildTier,
+        estimated_cost: String(d.totalCost)
+      }
     })
   })
   .then(function(res) { return res.json(); })
