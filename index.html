@@ -1278,6 +1278,49 @@ function showUnlockedResults() {
     <span><a href="#">Privacy</a> <a href="#">Terms</a></span>
   </div>
 </footer>
+<!-- Feedback Tab -->
+<div id="feedbackTab" onclick="toggleFeedback()"
+  style="position:fixed;right:0;top:50%;z-index:1000;
+  background:#1e3a5f;color:#fff;padding:12px 8px;
+  border-radius:8px 0 0 8px;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:12px;
+  font-weight:600;writing-mode:vertical-rl;
+  letter-spacing:1px">FEEDBACK</div>
 
+<!-- Feedback Panel -->
+<div id="feedbackPanel"
+  style="position:fixed;right:-420px;top:0;width:420px;
+  height:100%;background:#fff;box-shadow:-4px 0 20px rgba(0,0,0,0.15);
+  z-index:1001;transition:right 0.3s ease;overflow:hidden">
+  <div style="display:flex;justify-content:space-between;
+    align-items:center;padding:16px 20px;background:#1e3a5f;color:#fff">
+    <span style="font-weight:600;font-size:15px;
+      font-family:'Inter',sans-serif">Send Feedback</span>
+    <span onclick="toggleFeedback()"
+      style="cursor:pointer;font-size:22px;
+      line-height:1;opacity:0.7">&times;</span>
+  </div>
+  <iframe src="https://docs.google.com/forms/d/1YuvO-SmMY0ezgDYNmheRbpKwsFjyNo5016ZdvXVcUH4/edit?embedded=true"
+    style="width:100%;height:calc(100% - 52px);border:none">
+  </iframe>
+</div>
+
+<!-- Overlay -->
+<div id="feedbackOverlay" onclick="toggleFeedback()"
+  style="display:none;position:fixed;top:0;left:0;
+  width:100%;height:100%;background:rgba(0,0,0,0.3);
+  z-index:999"></div>
+
+<script>
+function toggleFeedback() {
+  var panel = document.getElementById('feedbackPanel');
+  var overlay = document.getElementById('feedbackOverlay');
+  var tab = document.getElementById('feedbackTab');
+  var isOpen = panel.style.right === '0px';
+  panel.style.right = isOpen ? '-420px' : '0px';
+  overlay.style.display = isOpen ? 'none' : 'block';
+  tab.style.display = isOpen ? 'block' : 'none';
+}
+</script>
 </body>
 </html>
