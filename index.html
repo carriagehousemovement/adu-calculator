@@ -1233,6 +1233,61 @@ function showUnlockedResults() {
     '<tr class="subtotal"><td>Your Savings</td><td style="text-align:right">' + fmt(d.totalCost - discounted) + '</td></tr></table>' +
     '<p style="font-size:13px;color:var(--text-light);margin-top:12px;">This is why the movement matters. More builds = lower costs for everyone.</p>';
 
+  </div>
+
+<div class="section-card">
+  <div class="section-header" style="background:#1e3a5f;">
+    New Block — Below Unlocked Results (Cleveland Heights users)
+  </div>
+  <div class="section-body">
+    <p>Add this as a new card after the "Volume Discount Opportunity" section, shown only when the selected city is Cleveland Heights:</p>
+
+    <div class="copy-block">
+      <p><strong>These Numbers Could Be Real for Cleveland Heights</strong></p>
+      <p>Cleveland Heights is actively developing ADU zoning. Five pre-approved carriage house designs have already been selected. Draft ordinance language has been written. What's needed now is community support.</p>
+      <p>When the community meeting is scheduled, the people who show up will shape what's possible for every homeowner on this page.</p>
+      <p><em>[Button: "Notify Me When the Meeting Is Scheduled" → Kit form or tag]</em></p>
+    </div>
+
+    <p>For cities with <strong>green</strong> zoning status (already permitted), show instead:</p>
+    <div class="copy-block">
+      <p><strong>Your City Already Says Yes</strong></p>
+      <p>Great news — ADUs are permitted in your area. The financing is ready, the numbers are in front of you, and the only thing left is getting started. Share your estimate with a contractor, or send the calculator to a neighbor who might not know this is possible yet.</p>
+    </div>
+
+    <p>For cities with <strong>red</strong> zoning status (not permitted), show:</p>
+    <div class="copy-block">
+      <p><strong>Your City Hasn't Said Yes Yet — But Others Have</strong></p>
+      <p>ADUs aren't currently permitted in your area, but the movement is growing. 1,639 Massachusetts families applied in year one after their state said yes. New York is offering $125K grants. Ohio cities are starting to follow. Sign up and we'll notify you when things change in your area — or when there's an opportunity to advocate.</p>
+      <p><em>[Button: "Keep Me Updated" → Kit form or tag]</em></p>
+    </div>
+
+    <div class="swap-box">
+      <span class="swap-label later">After legislation passes</span><br>
+      <strong>Cleveland Heights block becomes:</strong> "Cleveland Heights Said Yes. Now It's Your Turn." with a CTA to start planning their build. Remove the meeting notification CTA.
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-header" style="background:#5dada6;">
+    Results Email — Minor Tweak
+  </div>
+  <div class="section-body">
+    <p>In the automated results email (the one sent immediately via Kit), add one line at the bottom, before the signature:</p>
+
+    <div class="copy-block">
+      <p><span class="swap-label now">Pre-legislation</span></p>
+      <p>"These numbers become real when your city says yes. I'll keep you updated on what's happening in {{subscriber.city}} — and how you can help move things forward."</p>
+    </div>
+
+    <div class="swap-box">
+      <span class="swap-label later">After legislation passes (for green-zoning cities)</span><br>
+      "Your city already allows this. The financing is ready. These numbers are your starting point — not a dream, a plan."
+    </div>
+  </div>
+</div>
+  
   document.getElementById('lockedCard').style.display = 'none';
   document.getElementById('unlockedResults').classList.add('show');
   document.getElementById('unlockedResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
