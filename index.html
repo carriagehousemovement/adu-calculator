@@ -1278,9 +1278,10 @@ function showUnlockedResults() {
     <span><a href="#">Privacy</a> <a href="#">Terms</a></span>
   </div>
 </footer>
+
 <!-- Feedback Tab -->
 <div id="feedbackTab" onclick="toggleFeedback()"
-  style="position:fixed;right:0;top:50%;z-index:1000;
+  style="position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:1000;
   background:#1e3a5f;color:#fff;padding:12px 8px;
   border-radius:8px 0 0 8px;cursor:pointer;
   font-family:'Inter',sans-serif;font-size:12px;
@@ -1300,7 +1301,7 @@ function showUnlockedResults() {
       style="cursor:pointer;font-size:22px;
       line-height:1;opacity:0.7">&times;</span>
   </div>
-  <iframe src="https://docs.google.com/forms/d/1YuvO-SmMY0ezgDYNmheRbpKwsFjyNo5016ZdvXVcUH4/edit?embedded=true"
+  <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSefMaVMjHk7Mv-riedh4Zw8ERQiN2BeN-lVD7AtchyNysyfeQ/viewform?embedded=true"
     style="width:100%;height:calc(100% - 52px);border:none">
   </iframe>
 </div>
@@ -1322,5 +1323,6 @@ function toggleFeedback() {
   tab.style.display = isOpen ? 'block' : 'none';
 }
 </script>
+
 </body>
 </html>
